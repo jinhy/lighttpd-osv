@@ -1,0 +1,398 @@
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile' && test -n '0'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='src doc tests' ;; \
+  *) list='src doc tests' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in src
+make[1]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+test -f versionstamp.h || touch versionstamp.h; \
+REVISION=""; \
+if test -d "../.svn" -a -x "`which svnversion`"; then \
+	REVISION="$(LANG= LC_ALL=C svnversion ".." 2>/dev/null || echo exported)"; \
+	if test "$REVISION" = "exported"; then \
+		REVISION=""; \
+	fi; \
+fi; \
+if test -z "$REVISION" -a -d "../.git" -a -x "`which git`"; then \
+	REVISION="$(cd ".."; LANG= LC_ALL=C git describe --always 2>/dev/null || echo)"; \
+fi; \
+if test -n "$REVISION"; then \
+	echo "#define REPO_VERSION \"-devel-$REVISION\"" > versionstamp.h.tmp; \
+else \
+	echo "#define REPO_VERSION \"\"" > versionstamp.h.tmp; \
+fi; \
+if ! diff versionstamp.h.tmp versionstamp.h >/dev/null 2>/dev/null; then \
+	mv versionstamp.h.tmp versionstamp.h; \
+else \
+	rm versionstamp.h.tmp; \
+fi
+make  install-am
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+:
+list=' mod_flv_streaming.la mod_evasive.la mod_webdav.la mod_magnet.la mod_cml.la mod_trigger_b4_dl.la mod_mysql_vhost.la mod_cgi.la mod_scgi.la mod_staticfile.la mod_dirlisting.la mod_indexfile.la mod_setenv.la mod_alias.la mod_userdir.la mod_rrdtool.la mod_usertrack.la mod_proxy.la mod_ssi.la mod_secdownload.la mod_expire.la mod_evhost.la mod_simple_vhost.la mod_fastcgi.la mod_extforward.la mod_access.la mod_compress.la mod_auth.la mod_rewrite.la mod_redirect.la mod_status.la mod_accesslog.la'; test -n "/usr/lighttpd/lib" || list=; \
+list2=; for p in $list; do \
+  if test -f $p; then \
+    list2="$list2 $p"; \
+  else :; fi; \
+done; \
+test -z "$list2" || { \
+  echo " /usr/bin/mkdir -p '/usr/lighttpd/lib'"; \
+  /usr/bin/mkdir -p "/usr/lighttpd/lib" || exit 1; \
+  echo " /bin/sh ../libtool   --mode=install /usr/bin/install -c  $list2 '/usr/lighttpd/lib'"; \
+  /bin/sh ../libtool   --mode=install /usr/bin/install -c  $list2 "/usr/lighttpd/lib"; \
+}
+:
+list='lighttpd lighttpd-angel'; test -n "/usr/lighttpd/sbin" || list=; \
+if test -n "$list"; then \
+  echo " /usr/bin/mkdir -p '/usr/lighttpd/sbin'"; \
+  /usr/bin/mkdir -p "/usr/lighttpd/sbin" || exit 1; \
+fi; \
+for p in $list; do echo "$p $p"; done | \
+sed 's/$//' | \
+while read p p1; do if test -f $p \
+ || test -f $p1 \
+  ; then echo "$p"; echo "$p"; else :; fi; \
+done | \
+sed -e 'p;s,.*/,,;n;h' \
+    -e 's|.*|.|' \
+    -e 'p;x;s,.*/,,;s/$//;s,x,x,;s/$//' | \
+sed 'N;N;N;s,\n, ,g' | \
+gawk 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+  { d=$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+    if ($2 == $4) files[d] = files[d] " " $1; \
+    else { print "f", $3 "/" $4, $1; } } \
+  END { for (d in files) print "f", d, files[d] }' | \
+while read type dir files; do \
+    if test "$dir" = .; then dir=; else dir=/$dir; fi; \
+    test -z "$files" || { \
+    echo "  /bin/sh ../libtool   --mode=install /usr/bin/install -c $files '/usr/lighttpd/sbin$dir'"; \
+     /bin/sh ../libtool   --mode=install /usr/bin/install -c $files "/usr/lighttpd/sbin$dir" || exit $?; \
+    } \
+; done
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+make[1]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/src'
+Making install in doc
+make[1]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile' && test -n '1'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='config scripts initscripts systemd outdated' ;; \
+  *) list='config scripts initscripts systemd outdated' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in config
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile' && test -n '2'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='conf.d vhosts.d' ;; \
+  *) list='conf.d vhosts.d' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in conf.d
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/conf.d'
+make  install-exec-am install-data-am
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/conf.d'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/conf.d'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/conf.d'
+Making install in vhosts.d
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/vhosts.d'
+make  install-exec-am install-data-am
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/vhosts.d'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/vhosts.d'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config/vhosts.d'
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+make  install-exec-am install-data-am
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/config'
+Making install in scripts
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/scripts'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/scripts'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/scripts'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/scripts'
+Making install in initscripts
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/initscripts'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/initscripts'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/initscripts'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/initscripts'
+Making install in systemd
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/systemd'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/systemd'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/systemd'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/systemd'
+Making install in outdated
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/outdated'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/outdated'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/outdated'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc/outdated'
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+make[3]: Nothing to be done for `install-exec-am'.
+:
+list1='lighttpd.8'; \
+list2=''; \
+test -n "/usr/lighttpd/share/man/man8" \
+  && test -n "`echo $list1$list2`" \
+  || exit 0; \
+echo " /usr/bin/mkdir -p '/usr/lighttpd/share/man/man8'"; \
+/usr/bin/mkdir -p "/usr/lighttpd/share/man/man8" || exit 1; \
+{ for i in $list1; do echo "$i"; done;  \
+if test -n "$list2"; then \
+  for i in $list2; do echo "$i"; done \
+    | sed -n '/\.8[a-z]*$/p'; \
+fi; \
+} | while read p; do \
+  if test -f $p; then d=; else d="./"; fi; \
+  echo "$d$p"; echo "$p"; \
+done | \
+sed -e 'n;s,.*/,,;p;h;s,.*\.,,;s,^[^8][0-9a-z]*$,8,;x' \
+      -e 's,\.[0-9a-z]*$,,;s,x,x,;G;s,\n,.,' | \
+sed 'N;N;s,\n, ,g' | { \
+list=; while read file base inst; do \
+  if test "$base" = "$inst"; then list="$list $file"; else \
+    echo " /usr/bin/install -c -m 644 '$file' '/usr/lighttpd/share/man/man8/$inst'"; \
+    /usr/bin/install -c -m 644 "$file" "/usr/lighttpd/share/man/man8/$inst" || exit $?; \
+  fi; \
+done; \
+for i in $list; do echo "$i"; done | sed '$!N;$!N;$!N;$!N;$!N;$!N;$!N;s/\n/ /g' | sed '$!N;$!N;$!N;$!N;s/\n/ /g' | \
+while read files; do \
+  test -z "$files" || { \
+    echo " /usr/bin/install -c -m 644 $files '/usr/lighttpd/share/man/man8'"; \
+    /usr/bin/install -c -m 644 $files "/usr/lighttpd/share/man/man8" || exit $?; }; \
+done; }
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+make[1]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/doc'
+Making install in tests
+make[1]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile .deps/fcgi-auth.Po .deps/fcgi-responder.Po' && test -n '1'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='docroot' ;; \
+  *) list='docroot' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in docroot
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile' && test -n '2'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='123 www' ;; \
+  *) list='123 www' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in 123
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/123'
+make  install-exec-am install-data-am
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/123'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/123'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/123'
+Making install in www
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+fail=; \
+if (target_option=k; case ${target_option-} in ?) ;; *) echo "am__make_running_with_option: internal error: invalid" "target option '${target_option-}' specified" >&2; exit 1;; esac; has_opt=no; sane_makeflags=$MAKEFLAGS; if test -n ' Makefile' && test -n '3'; then sane_makeflags=$MFLAGS; else case $MAKEFLAGS in *\\[\ \	]*) bs=\\; sane_makeflags=`printf '%s\n' "$MAKEFLAGS" | sed "s/$bs$bs[$bs $bs	]*//g"`;; esac; fi; skip_next=no; strip_trailopt () { flg=`printf '%s\n' "$flg" | sed "s/$1.*$//"`; }; for flg in $sane_makeflags; do test $skip_next = yes && { skip_next=no; continue; }; case $flg in *=*|--*) continue;; -*I) strip_trailopt 'I'; skip_next=yes;; -*I?*) strip_trailopt 'I';; -*O) strip_trailopt 'O'; skip_next=yes;; -*O?*) strip_trailopt 'O';; -*l) strip_trailopt 'l'; skip_next=yes;; -*l?*) strip_trailopt 'l';; -[dEDm]) skip_next=yes;; -[JT]) skip_next=yes;; esac; case $flg in *$target_option*) has_opt=yes; break;; esac; done; test $has_opt = yes); then \
+  failcom='fail=yes'; \
+else \
+  failcom='exit 1'; \
+fi; \
+dot_seen=no; \
+target=`echo install-recursive | sed s/-recursive//`; \
+case "install-recursive" in \
+  distclean-* | maintainer-clean-*) list='go indexfile expire' ;; \
+  *) list='go indexfile expire' ;; \
+esac; \
+for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (CDPATH="${ZSH_VERSION+.}:" && cd $subdir && make  $local_target) \
+  || eval $failcom; \
+done; \
+if test "$dot_seen" = "no"; then \
+  make  "$target-am" || exit 1; \
+fi; test -z "$fail"
+Making install in go
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/go'
+make  install-exec-am install-data-am
+make[5]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/go'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/go'
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/go'
+Making install in indexfile
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/indexfile'
+make  install-exec-am install-data-am
+make[5]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/indexfile'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/indexfile'
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/indexfile'
+Making install in expire
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/expire'
+make  install-exec-am install-data-am
+make[5]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/expire'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/expire'
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www/expire'
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+make  install-exec-am install-data-am
+make[5]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+make[5]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot/www'
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+make  install-exec-am install-data-am
+make[4]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests/docroot'
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+make  install-exec-am install-data-am
+make[3]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+make[3]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+make[1]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35/tests'
+make[1]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35'
+if test ! -f config.h; then rm -f stamp-h1; else :; fi
+if test ! -f config.h; then make  stamp-h1; else :; fi
+make  install-exec-am install-data-am
+make[2]: Entering directory `/home/fedora/Desktop/work/lighttpd-1.4.35'
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+make[2]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35'
+make[1]: Leaving directory `/home/fedora/Desktop/work/lighttpd-1.4.35'
